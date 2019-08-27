@@ -115,6 +115,9 @@
             "heading": "OK",
             "msg": "Form is valid!"
         },
+        "valuehasspaces": {
+            "multiple": "Select multiple question has an illegal value \"__value__\" that contains a space."
+        },
         "xpatherror": {
             "heading": "Formula Error",
             "msg": "A formula evaluation error occurred. Please contact __emailLink__ with this error:"
@@ -168,6 +171,10 @@
             "posButton": "Prepare",
             "psize": "Paper Size",
             "reminder": "Remember to set these same print settings in the browser's print menu afterwards!"
+        },
+        "repeatremove": {
+            "heading": "Delete this group of responses?",
+            "msg": "This action is irreversible. Are you sure you want to proceed?"
         },
         "save": {
             "existingerror": "This record name or ID already exists.",
@@ -262,6 +269,11 @@
         "searchPlaceholder": "search for place or address"
     },
     "here": "here",
+    "hint": {
+        "guidance": {
+            "details": "more details"
+        }
+    },
     "home": {
         "msg": "__appTitle__ is running! Please access Enketo forms from your __serverName__ installation."
     },
@@ -296,6 +308,10 @@
         "th": "Thai",
         "vi": "Vietnamese",
         "zh": "Chinese"
+    },
+    "literacywidget": {
+        "finish": "Finish",
+        "start": "Start"
     },
     "page": {
         "modernbrowsers": {

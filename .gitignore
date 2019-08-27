@@ -2,11 +2,13 @@
 .scratchpad
 .nodemon-*
 .DS_Store
+Thumbs.db
 .env
 *.sublime-project
 *.sublime-workspace
 *.diff
 node_modules
+npm-debug.log
 public/css/*.css
 **/build/*
 translation_old.json
@@ -18,3 +20,6 @@ setup/docker/secrets/*
 setup/docker/redis_main_data/*
 logs/submissions*
 logs/logrotate
+.nyc_output
+test-coverage
+coverage.shield.badge.md

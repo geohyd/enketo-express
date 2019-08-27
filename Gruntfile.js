@@ -1,5 +1,5 @@
 module.exports = grunt => {
-    const JS_INCLUDE = [ '**/*.js', '!node_modules/**', '!test/**/*.spec.js', '!public/js/build/*' ];
+    const JS_INCLUDE = [ '**/*.js', '!**/node_modules/**', '!test/**/*.spec.js', '!public/js/build/*', '!test/client/config/karma.conf.js', '!docs/**', '!test-coverage/**' ];
     const path = require( 'path' );
     const nodeSass = require( 'node-sass' );
     const bundles = require( './buildFiles' ).bundles;
@@ -31,14 +31,7 @@ module.exports = grunt => {
         },
         sass: {
             options: {
-                implementation: nodeSass,
-                functions: {
-                    'base64-url($mimeType, $data)': function( mimeType, data ) {
-                        const base64 = new Buffer( data.getValue() ).toString( 'base64' );
-                        const urlString = `url("data:${mimeType.getValue()};base64,${base64}")`;
-                        return nodeSass.types.String( urlString );
-                    }
-                }
+                implementation: nodeSass
             },
             compile: {
                 cwd: 'app/views/styles',
@@ -85,12 +78,15 @@ module.exports = grunt => {
             }
         },
         shell: {
+            buildReadmeBadge: {
+                command: 'node ./update-readme-with-shield-badge.js'
+            },
             translation: {
                 command: [
                     'cd locales',
-                    'gulp',
+                    'npx gulp',
                     'cd ..'
-                ].join( '&&' )
+                ].join( ' && ' )
             },
             ie11polyfill: {
                 command: [
@@ -156,7 +152,6 @@ module.exports = grunt => {
         karma: {
             options: {
                 singleRun: true,
-                reporters: [ 'dots' ],
                 configFile: 'test/client/config/karma.conf.js'
             },
             headless: {
@@ -164,6 +159,20 @@ module.exports = grunt => {
             },
             browsers: {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', 'Opera' /*,'Safari'*/ ],
+            }
+        },
+        nyc: {
+            cover: {
+                options: {
+                    reporter: [
+                        'html',
+                        'text-summary',
+                        'json'
+                    ],
+                    reportDir: './test-coverage/server'
+                },
+                cmd: false,
+                args: [ 'grunt', 'mochaTest:all' ]
             }
         },
         terser: {
@@ -209,6 +218,9 @@ module.exports = grunt => {
     grunt.registerTask( 'client-config-file', 'Temporary client-config file', task => {
         const CLIENT_CONFIG_PATH = 'public/js/build/client-config.js';
         if ( task === 'create' ) {
+            // https://github.com/enketo/enketo-express/issues/102
+            // The require cache may contain stale configuration from another task. Purge it.
+            delete require.cache[ require.resolve( './app/models/config-model' ) ];
             const config = require( './app/models/config-model' );
             grunt.file.write( CLIENT_CONFIG_PATH, `export default ${JSON.stringify( config.client )};` );
             grunt.log.writeln( `File ${CLIENT_CONFIG_PATH} created` );
@@ -260,7 +272,7 @@ module.exports = grunt => {
     grunt.registerTask( 'js-dev', [ 'js' ] );
     grunt.registerTask( 'js-ie11', [ 'js', 'shell:ie11polyfill', 'shell:babel', 'shell:browserify' ] );
     grunt.registerTask( 'css', [ 'shell:clean-css', 'system-sass-variables:create', 'sass' ] );
-    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'mochaTest:all', 'karma:headless', 'jsbeautifier:test', 'eslint' ] );
+    grunt.registerTask( 'test', [ 'env:test', 'js', 'css', 'nyc:cover', 'karma:headless', 'shell:buildReadmeBadge', 'jsbeautifier:test', 'eslint' ] );
     grunt.registerTask( 'test-browser', [ 'env:test', 'css', 'client-config-file:create', 'karma:browsers' ] );
     grunt.registerTask( 'develop', [ 'env:develop', 'i18next', 'js-dev', 'css', 'concurrent:develop' ] );
     grunt.registerTask( 'develop-ie11', [ 'env:develop', 'i18next', 'js-ie11', 'css', 'concurrent:develop' ] );

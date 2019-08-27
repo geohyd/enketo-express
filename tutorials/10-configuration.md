@@ -1,11 +1,11 @@
 Configuration
 ==============
 
-All configuration is done in config/config.json or with equivalent environment variables (see [sample.env](./sample.env)). **Leave config/default-config.json unchanged.** Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.
+All configuration is done in config/config.json or with equivalent environment variables (see [sample.env](https://github.com/enketo/enketo-express/blob/master/config/sample.env)). **Leave config/default-config.json unchanged.** Whichever of these 2 methods you choose, will override the defaults set in config/default-config.json.
 
 Below is a complete list of all configuration items. The **bold items are important to set**. Others are less important.
 
-#### app name 
+#### app name
 Just use `"Enketo for [your service name]"`. It is not used much in the app.
 
 #### port
@@ -16,7 +16,7 @@ Enable or disable offline functionality. Is either `false` or `true`.
 
 #### linked form and data server
 * name: The (short) name of your form server. This name will be used in various places in the app to provide feedback to the user. E.g. "ODK Aggregate", "KoboToolbox", "MyCoolService"
-* **server url: Initially this can be an empty string (`""`). This will allow any server that knows the secret api key to use your Enketo installation. If you'd like to lock the usage down to a particular form server for optimimum security, fill in your domain without the protocol. E.g. "kobotoolbox.org". Depending on your form server, you can even specify that the server can only be used for a particular account e.g. "myformhub.org/janedoe". You can also use a regular expression string e.g. "opendatakit\\.appspot\\.com" (it will be used to create a regular expression with RegExp()).**
+* **server url: Initially this can be an empty string (`""`). This will allow any server that knows the secret api key to use your Enketo installation. If you'd like to lock the usage down to a particular form server for optimimum security, fill in your domain without the protocol. E.g. "kobotoolbox.org". Depending on your form server, you can even specify that the server can only be used for a particular account e.g. "myformhub.org/janedoe". You can also use a regular expression string e.g. `"opendatakit\\.appspot\\.com"` (it will be used to create a regular expression with RegExp()).**
 * **api key: The api key that will be used to authenticate any API usage, e.g. to launch a form when the 'webform' button is clicked. This is the key (sometimes called _token_) you need to copy in your form server. You can use any hard-to-guess alphanumeric string you want. We're not aware of limitations in length or characters.**
 * legacy formhub: Formhub is a dead project and therefore has bugs that won't be fixed. Setting this setting to `true` temporarily works around some of these bugs to give you time to switch to a better alternative that is alive.
 * authentication: an object that configures the type of authentication to use. See examples and details below:
@@ -65,22 +65,25 @@ This allows a deeper integration for a custom server. It configures a (required)
 ```
 
 #### timeout
-Connection timeout in milliseconds used throughout Enketo. This is particularly relevant for submissions from Enketo to the OpenRosa server. 
+Connection timeout in milliseconds used throughout Enketo. This is particularly relevant for submissions from Enketo to the OpenRosa server.
 
-#### encryption key 
+#### expiry for record cache
+Expiry in milliseconds for a cached record from the moment it is offered to Enketo for editing through one of Enketo's **/instance/\*** API endpoints. Once the expiry time is reached, the record is removed.
+
+#### encryption key
 Enketo will use this to encrypt sensitive information whenever necessary (e.g. for the form server credentials that are stored in a cookie in the user's browser). Never share this key and never change it after the initial configuration (unless it was compromised). No specific key length requirements (I think).
 
-#### less secure encryption key 
+#### less secure encryption key
 Enketo will use this to symmetrically encrypt enketo IDs for the special single-submission webform views. This encryption should be considered crackable and is not used for sensitive data. For security reasons it therefore requires a separate key. Do not change this key after initial configuration as it will break some webform URLs.
 
-#### default theme 
+#### default theme
 The theme to use if the survey has no user-or-api-defined theme. Values could be `"kobo"`, `"formhub"`, `"grid"`, or `"[yourowncustomtheme]"`.
 
 #### base path
 The basepath Enketo should use for everything. The default is `""`, which gives a baseUrl like https://yourdomain.com. If you set the value to e.g. `"enketo"`, the baseUrl for the app becomes https://yourdomain.com/enketo. Warning: If the base path is changed, you need to discard your redis **cache** database to ensure form media URLs are re-generated.
 
 #### log
-* submissions: Whether successfully submitted _record instanceIDs_ should be logged into log files. This could help troubleshoot any issues with the Form/Data Server or with Enketo. Only 201 responses to /submission on the Form/Data server will be logged. If a record is divided into multiple batches, it should only be recorded once. Logging instancedIDs could be considered a privacy issue, as together with web server logs it will potentially allow one to determine which IP address a specific record (instanceID) was submitted from and when. 
+* submissions: Whether successfully submitted _record instanceIDs_ should be logged into log files. This could help troubleshoot any issues with the Form/Data Server or with Enketo. Only 201 responses to /submission on the Form/Data server will be logged. If a record is divided into multiple batches, it should only be recorded once. Logging instancedIDs could be considered a privacy issue, as together with web server logs it will potentially allow one to determine which IP address a specific record (instanceID) was submitted from and when.
 
 #### themes supported
 An array of theme names to enable. This can be used to disable certain themes. If this configuration item is absent or an empty array, all installed themes will be enabled.
@@ -89,7 +92,7 @@ An array of theme names to enable. This can be used to disable certain themes. I
 * **email: The email address your users can contact when they experience problems with the service.**
 
 #### widgets
-An Array of widgets to enable. Enketo Core widgets are simple strings ("note", "select-desktop", "select-mobile", "autocomplete", "geo", "geo-esri", "textarea", "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "likert", "range", "rank", "url", "horizontal", "image-view", "comment", "image-map", "date-mobile"). See [this file](../public/js/src/module/core-widgets.json) for an update list. You can also add custom widgets by adding a local path. See more info [here](../doc/custom-widgets.md). Note that any value for `"widgets"` will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.
+An Array of widgets to enable. Enketo Core widgets are simple strings ("note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "likert", "range", "rank", "url", "horizontal", "image-view", "comment", "image-map", "date-mobile"). See [this file](https://github.com/enketo/enketo-express/blob/master/public/js/src/module/core-widgets.json) for an update list. You can also add custom widgets by adding a local path. See more info [here](../doc/custom-widgets.md). Note that any value for `"widgets"` will completely override the default array in default-config.json, so it's best to start copying the default array value and amend it as desired or leave it out of config.json if you don't need to modify widgets. If this configuration item is present in config.json, you will need to manually add any new widgets that are added to default-config.json in the future.
 
 #### analytics
 Which analytics service you'd like to use, either `"google"` or `"piwik"` or if none is required either `""` or `false`.
@@ -117,7 +120,7 @@ The `maps` configuration can include an array of Mapbox TileJSON objects (or a s
 } ]
 ```
 
-For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers. 
+For GMaps layers you have the four options as tiles values: `"GOOGLE_SATELLITE"`, `"GOOGLE_ROADMAP"`, `"GOOGLE_HYBRID"`, `"GOOGLE_TERRAIN"`. You can also add other TileJSON properties, such as minZoom, maxZoom, id to all layers.
 
 #### query parameter to pass to submission
 For most form servers this item does nothing. If you would like to pass a particular ID to any online-only webform url as a query parameter and track submissions with this ID, you can provide the parameter name here. The parameter and its value will be copied to the submission URL.
@@ -150,5 +153,8 @@ Determines whether the Next button should trigger validation and block the user 
 This setting with default `true` value determines whether to enable support for _swiping_ to the next and previous page for forms that are divided into pages.
 
 #### payload limit
-This setting sets the maximum weight of payload sent to the API. Unit can be `b`, `kb` or `mb`.  
+This setting sets the maximum weight of payload sent to the API. Unit can be `b`, `kb` or `mb`.
 The default value is `100kb`.
+
+#### text field character limit
+Sets the maximum allowable text field characters with a default of 2000. This settings is meant to match any back-end database limits to avoid records that cannot be submitted because the server does no accept them.

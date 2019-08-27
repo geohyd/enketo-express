@@ -10,7 +10,7 @@ import utils from './module/utils';
 import formCache from './module/form-cache';
 import appCache from './module/application-cache';
 
-const $loader = $( 'body > .main-loader' );
+const $loader = $( '.main-loader' );
 const $formheader = $( '.main > .paper > .form-header' );
 const survey = {
     enketoId: settings.enketoId,
@@ -122,7 +122,7 @@ function _setEmergencyHandlers() {
 /**
  * Adds/replaces branding if necessary, and unhides branding.
  * 
- * @param {[type]} survey [description]
+ * @param {*} survey [description]
  */
 function _addBranding( survey ) {
     const $brandImg = $( '.form-header__branding img' );
@@ -140,8 +140,8 @@ function _addBranding( survey ) {
 /**
  * Swaps the theme if necessary.
  * 
- * @param  {[type]} survey [description]
- * @return {[type]}        [description]
+ * @param  {*} survey [description]
+ * @return {*}        [description]
  */
 function _swapTheme( survey ) {
     if ( survey.form && survey.model ) {
@@ -157,12 +157,12 @@ function _prepareInstance( modelStr, defaults ) {
     let existingInstance = null;
 
     for ( const path in defaults ) {
-        if ( defaults.hasOwnProperty( path ) ) {
+        if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
             model = model || new FormModel( modelStr, {
                 full: false
             } );
             init = init || model.init();
-            if ( defaults.hasOwnProperty( path ) ) {
+            if ( Object.prototype.hasOwnProperty.call( defaults, path ) ) {
                 // if this fails, the FormModel will output a console error and ignore the instruction
                 model.node( path ).setVal( defaults[ path ] );
             }
@@ -181,7 +181,6 @@ function _init( formParts ) {
     return new Promise( ( resolve, reject ) => {
         if ( formParts && formParts.form && formParts.model ) {
             $formheader.after( formParts.form );
-            localize( document.querySelector( 'form.or' ) );
             $( document ).ready( () => {
                 // TODO pass $form as first parameter?
                 // controller.init is asynchronous
@@ -195,6 +194,8 @@ function _init( formParts ) {
                     if ( settings.print ) {
                         gui.applyPrintStyle();
                     }
+                    // after widgets have been initialized, localize all data-i18n elements
+                    localize( document.querySelector( 'form.or' ) );
                     resolve( formParts );
                 } );
             } );

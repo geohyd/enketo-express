@@ -171,7 +171,7 @@ function csvToXml( csv, langMap ) {
  * Generates a querystring from an object or an array of objects with `name` and `value` properties.
  * 
  * @param  {{name: string, value: *}|<{name: string, value: *}>} obj [description]
- * @return {[type]}     [description]
+ * @return {*}     [description]
  */
 function getQueryString( obj ) {
     let arr;
@@ -202,7 +202,7 @@ function _serializeQueryComponent( name, value ) {
     // for both arrays of single-level objects and regular single-level objects
     if ( typeof value === 'object' ) {
         for ( n in value ) {
-            if ( value.hasOwnProperty( n ) ) {
+            if ( Object.prototype.hasOwnProperty.call( value, n ) ) {
                 if ( serialized ) {
                     serialized += '&';
                 }

@@ -1,3 +1,7 @@
+/**
+ * @module instance-model
+ */
+
 const config = require( './config-model' ).server;
 const TError = require( '../lib/custom-error' ).TranslatedError;
 const utils = require( '../lib/utils' );
@@ -42,7 +46,7 @@ function _cacheInstance( survey ) {
                             reject( error );
                         } else {
                             // expire, no need to wait for result
-                            client.expire( instanceKey, 30 );
+                            client.expire( instanceKey, config[ 'expiry for record cache' ] / 1000 );
                             resolve( survey );
                         }
                     } );

@@ -13,6 +13,7 @@
         }
     },
     "timeout": 300000,
+    "expiry for record cache": 30000,
     "encryption key": "s0m3v3rys3cr3tk3y",
     "less secure encryption key": "this $3cr3t key is crackable",
     "default theme": "kobo",
@@ -26,8 +27,9 @@
     },
     "widgets": [
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
-        "table", "radio", "date", "time", "datetime", "compact", "file", "draw", "rank",
-        "likert", "range", "horizontal", "image-view", "comment", "image-map", "date-native", "date-mobile"
+        "table", "radio", "date", "time", "datetime", "select-media", "file", "draw", "rank",
+        "likert", "range", "columns", "image-view", "comment", "image-map", "date-native", "date-native-ios",
+        "date-mobile", "text-max"
     ],
     "analytics": "google",
     "google": {
@@ -69,5 +71,6 @@
     "repeat ordinals": false,
     "validate continuously": false,
     "validate page": true,
-    "payload limit": "100kb"
+    "payload limit": "100kb",
+    "text field character limit": 2000
 }

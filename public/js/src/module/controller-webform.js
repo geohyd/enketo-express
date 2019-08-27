@@ -8,6 +8,7 @@ import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
 import { updateDownloadLink } from 'enketo-core/src/js/utils';
+import events from './event';
 import fileManager from './file-manager';
 import { t } from './translator';
 import records from './records-queue';
@@ -17,7 +18,7 @@ import encryptor from './encryptor';
 let form;
 let formSelector;
 let formData;
-let $formprogress;
+let formprogress;
 const formOptions = {
     clearIrrelevantImmediately: false,
     printRelevantOnly: settings.printRelevantOnly
@@ -48,7 +49,7 @@ function init( selector, data ) {
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
             // this is placed in between form.init() and form.goTo().
-            $( 'body > .main-loader' ).remove();
+            $( '.main-loader' ).remove();
 
             if ( settings.goTo && location.hash ) {
                 console.log( 'going to ', location.hash.substring( 1 ) );
@@ -59,7 +60,7 @@ function init( selector, data ) {
                 loadErrors.unshift( t( 'error.encryptionnotsupported' ) );
             }
 
-            $formprogress = $( '.form-progress' );
+            formprogress = document.querySelector( '.form-progress' );
 
             _setEventHandlers();
             setLogoutLinkVisibility();
@@ -274,7 +275,7 @@ function _submitRecord() {
             }
 
             // this event is used in communicating back to iframe parent window
-            $( document ).trigger( 'submissionsuccess' );
+            document.dispatchEvent( events.SubmissionSuccess() );
 
             if ( redirect ) {
                 if ( !settings.multipleAllowed ) {
@@ -541,7 +542,7 @@ function _setEventHandlers() {
 
     $( 'button#close-form:not(.disabled)' ).click( () => {
         const msg = t( 'alert.submissionsuccess.redirectmsg' );
-        $doc.trigger( 'close' );
+        document.dispatchEvent( events.Close() );
         gui.alert( msg, t( 'alert.closing.heading' ), 'warning' );
         setTimeout( () => {
             location.href = decodeURIComponent( settings.returnUrl || settings.defaultReturnUrl );
@@ -586,18 +587,20 @@ function _setEventHandlers() {
         $( this ).next( '.record-list__records__msg' ).toggle( 100 );
     } );
 
-    $doc.on( 'progressupdate.enketo', 'form.or', ( event, status ) => {
-        if ( $formprogress.length > 0 ) {
-            $formprogress.css( 'width', `${status}%` );
+    document.addEventListener( events.ProgressUpdate().type, event => {
+        if ( event.target.classList.contains( 'or' ) && formprogress && event.detail ) {
+            formprogress.style.width = `${event.detail}%`;
         }
     } );
 
     if ( inIframe() && settings.parentWindowOrigin ) {
-        $doc.on( 'submissionsuccess edited.enketo close', postEventAsMessageToParentWindow );
+        document.addEventListener( events.SubmissionSuccess().type, postEventAsMessageToParentWindow );
+        document.addEventListener( events.Edited().type, postEventAsMessageToParentWindow );
+        document.addEventListener( events.Close().type, postEventAsMessageToParentWindow );
     }
 
-    $doc.on( 'queuesubmissionsuccess', function( ...args ) {
-        const successes = Array.prototype.slice.call( args ).slice( 1 );
+    document.addEventListener( events.QueueSubmissionSuccess().type, event => {
+        const successes = event.detail;
         gui.feedback( t( 'alert.queuesubmissionsuccess.msg', {
             count: successes.length,
             recordNames: successes.join( ', ' )
@@ -614,7 +617,7 @@ function _setEventHandlers() {
     }
 
     if ( settings.offline ) {
-        $doc.on( 'valuechange.enketo', _autoSaveRecord );
+        $doc.on( 'valuechange', _autoSaveRecord );
     }
 }
 

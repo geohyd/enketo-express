@@ -2,10 +2,129 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[1.78.0] - 2019-08-20
+---------------------
+##### Removed
+- ArcGIS Geo widget.
+
+##### Added
+- Make record cache expiry time configurable.
+- Support for max-pixel attribute for image uploads.
+
+##### Changed
+- Updated Swedish, Dutch and German translations.
+- Show warning if select_multiple option contains spaces in value.
+- Guidance hints are now displayed on screen as collapsible element.
+
+##### Fixed
+- Likert widget label in Grid Theme overlaps widget in print view.
+
+[1.77.1] - 2019-07-12
+--------------------
+##### Changed
+- Improvements to print style (group header size, opacity of disabled questions, line-height in Grid Theme)
+- Improved print style of select minimal widget.
+
+##### Fixed
+- Disabled analog-scale widget is still visible.
+- Long words break out of cell in Grid Theme.
+- Workaround for an iOS browser bug where a readonly date input is actually fully functional. **WARNING: you may have to add a widget to config.json to activate, see default-config.json change**
+  
+[1.77.0] - 2019-05-21
+--------------------
+##### Removed
+- Support for appearances "quick" and "quickcompact".
+
+##### Added
+- Support for appearances "columns", "columns-pack", "columns-n" all with an optional "no-buttons" modifier, **WARNING: you may need to change widgets configuration in config.json `"compact" -> "select-media"` and `"horizontal-choices" -> "columns"`)**.
+- 
+##### Fixed
+- Analog scale widget without current value box, still firing excessive change events.
+- Distress widget mercury is not reset properly.
+
+[1.76.3] - 2019-05-09
+--------------------
+##### Fixed
+- Some forms with repeats fail to load in Safari.
+- Iframe-friendly views only print first page.
+- Draw widgets loose drawing (or last stroke(s) in drawing) on mobile devices if clicking hide-full-screen button or switching device orientation within 1.5 sec after last change.
+- Datepickers in Grid Theme in Firefox show the reset button outside the cell.
+- Range, Analog Scale, Datetime, and Time widgets fire an unnecessary change event when a new value is set that is equal to the existing value.
+- Range widget fires an unnecessary change event when the value is empty, before the value is set, when the user clicks the widget.
+
+[1.76.2] - 2019-04-24
+--------------------
+##### Fixed
+- Failing to clone repeats that only contain calculations.
+- Select one calculations not updating correctly.
+- Irrelevant calculations inside non-first repeat instances run upon load.
+- Date strings without timezone component are not always converted correctly in time zones that have DST.
+- Hand-typed/pasted dates with spaces or invalid characters are kept shown to user, but are not stored in model.
+
+[1.76.1] - 2019-04-01
+---------------------
+##### Changed
+- The restriction on crossing paths in the geoshape widget was removed.
+- Hide reset button when question is readonly.
+ 
+##### Fixed
+- Radiobutton unselect functionality can cause infinite loops with certain custom extensions that update values programmatically.
+- Readonly Draw/Signature widget updates with empty file when canvas looses focus. 
+- Readonly Select Minimal widget is not readonly.
+- Readonly File widget becomes writeable if it becomes relevant.
+
+[1.76.0] - 2019-03-19
+---------------------
+##### Added
+- A configurable option to provide a maximum character length of a text field (default: 2000 characters). **Warning: if overriding widgets in config.json, this widget needs to be explicitly enabled.**
+
+##### Changed
+- Updated Russian, Swedish, Spanish, and Dutch translations
+  
+##### Fixed
+- The output in an itemset option label is not populated upon load.
+
+[1.75.3] - 2019-02-27
+---------------------
+##### Fixed
+- Submissions cause an exception in online-only view.
+
+[1.75.2] - 2019-02-26
+---------------------
+##### Changed
+- Partial rewrite of events.
+- Improved accuracy of progress tracker.
+  
+##### Fixed
+- Various issues when serving forms in a iframe on iOS devices.
+- On touchscreen devices, the draw widget download functionality does not work, and clicking the Draw button empties the canvas.
+- XForms using geopoint, geotrace, geoshape, time, date, datetime, select minimal, rank, autocomplete calculations **without form control** (advanced) fail to load.
+- Some widgets (such as all geo widgets) do not update view if a calculation changes the underlying value.
+
+[1.75.1] - 2019-02-21
+---------------------
+##### Fixed
+- Calculations using advanced count(/path/to/repeat/node1[text()="something"]) aren't recalculated when a node1 changes.
+- Exception occurs when appearance 'horizontal' is added to group (which has no support for this appearance).
+- If the window in an online-only multi-page form is resized, while a drawing is on a currently-not-shown page, the submission results in an empty drawing.
+
+[1.75.0] - 2019-02-18
+---------------------
+##### Changed
+- Updated German translation.
+- Readonly draw widgets no longer show drawings on grey background in Grid Theme, nor apply an opaqueness filter.
+- Repeat deletion with "-" button now requires confirmation.
+
+##### Fixed
+- Loading image from record may show error even if it was loaded successfully.
+- Generic file upload not working (cannot set property 'src' of null).
+
+[1.74.4] - 2019-02-07
 ---------------------
 ##### Fixed
 - IE11 fails to load.
+- New repeats are always shown in default language.
+- Relative repeat-counts not working.
 
 [1.74.3] - 2019-01-10
 ---------------------
