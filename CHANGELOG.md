@@ -2,6 +2,60 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.81.2] - 2019-11-04
+---------------------
+##### Changed
+- Updated Slovak translation
+
+##### Fixed
+- If a predicate consists of parts that contain multiple `current()` calls, the expression is not evaluated correctly (noticeable inside repeats for multiple-choice questions with complex choice filters).
+
+[1.81.1] - 2019-10-23
+----------------------
+##### Fixed
+- New mobile datetimepicker not activated properly.
+
+[1.81.0] - 2019-10-23
+----------------------
+##### Changed
+- Improve Docker configuration: use Node.js base image and v3 Compose file.
+- Updated Russian translation.
+- Now using native datetime picker on mobile browsers.
+
+##### Fixed
+- Option labels break in middle of word instead of a space.
+- Readonly native date/time/datetime picker in iOS is fully functional when it should not be (re-introduced bug in iOS13).
+- Exception in geo widget (though may not have had negative consequences).
+
+[1.80.0] - 2019-10-04
+----------------------
+##### Added
+- Rating widget!
+
+##### Changed
+- Updated German, Spanish and Dutch translations.
+- ToC now matches ODK Collect and shows all questions hierarchically.
+
+##### Fixed
+- time/datetime with time between 12:00 and 13:00 not set to PM.
+- time picker in datetime shows empty value if the default value of datetime is at midnight.
+- AM/PM notation broken in time/datetime picker for non-english languages.
+- Readonly instance views are unnecessarily locked when called in quick succession.
+
+[1.79.0] - 2019-09-12
+----------------------
+##### Added
+- Support for "picker" appearance on range question.
+- Albanian language translation.
+
+##### Changed
+- Updated Russian translation.
+- XPath functions `decimal-time()` and `decimal-date-time()` now use maximum precision instead of rounding to 3 decimals.
+
+##### Fixed
+- Datepicker widget causes infinite loops with certain custom extensions that update values programmatically.
+- Analog scale widget layout messed up in Grid Theme on IE11.
+
 [1.78.0] - 2019-08-20
 ---------------------
 ##### Removed
