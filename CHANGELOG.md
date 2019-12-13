@@ -2,10 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[Unreleased]
+---------------------
+##### Fixed
+- Some PDF viewers do not show radiobuttons with an opacity (e.g. a disabled radio button).
+- MS Edge does not show any checkmarks in printouts of radiobuttons and checkboxes.
+
+[1.81.3] - 2010-11-22
+---------------------
+##### Changed
+- Updated Czech translation.
+
+##### Fixed
+- PDF does not show background colours.
+- `current()` without a path, and `current()/path/to/node` without a step down do not work.
+- Datetime picker does not load a midnight datetime value.
+- Analog scale layout messed up in printout.
+
 [1.81.2] - 2019-11-04
 ---------------------
 ##### Changed
-- Updated Slovak translation
+- Updated Slovak translation.
 
 ##### Fixed
 - If a predicate consists of parts that contain multiple `current()` calls, the expression is not evaluated correctly (noticeable inside repeats for multiple-choice questions with complex choice filters).
