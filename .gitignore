@@ -24,3 +24,5 @@ logs/logrotate
 test-coverage
 coverage.shield.badge.md
 _drafts
+widget/*
+package-lock.json
