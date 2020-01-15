@@ -27,3 +27,4 @@ _drafts
 widget
 widget/*
 package-lock.json
+public/sql.js
