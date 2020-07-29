@@ -29,7 +29,7 @@
         "note", "select-desktop", "select-mobile", "autocomplete", "geo", "textarea", "url",
         "table", "radio", "date", "time", "datetime", "select-media", "file", "draw", "rank",
         "likert", "range", "columns", "image-view", "comment", "image-map", "date-native", "date-native-ios",
-        "date-mobile", "text-max", "rating"
+        "date-mobile", "text-max", "text-print", "rating", "thousands-sep"
     ],
     "analytics": "google",
     "google": {
@@ -44,6 +44,9 @@
             "tracker url": "",
             "site id": ""
         }
+    },
+    "headless": {
+        "timeout": 60000
     },
     "maps": [ {
         "name": "streets",

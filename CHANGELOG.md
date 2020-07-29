@@ -2,8 +2,141 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.0.1] - 2020-03-26
+----------------------
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY THIS VERSION BEFORE CHROME 82 IS RELEASED SOME TIME IN APRIL 2020 AND PREFERABLY AFTER VERSION 1.86.x HAS BEEN DEPLOYED. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+##### Fixed
+- Preview urls using a `form` queryparameter are broken.
+
+[2.0.0] - 2020-03-25
+----------------------
+##### Removed
+- Support for Internet Explorer
+- Support for offline-capable webform URLs using \# and online-only URLs using ::.
+
+##### Changed
+- Automatically redirect old-style URLs that are no longer supported.
+- Switch offline application caching technology from ApplicationCache to Service Workers (**MAJOR**).
+
+[1.86.3] - 2020-03-20
+----------------------
+**WARNING: IT IS HIGHLY RECOMMENDED TO DEPLOY ONE OF THE 1.86.x VERSIONS BEFORE MARCH 31ST, 2020. READ MORE [HERE](https://groups.google.com/forum/#!topic/enketo-users/1AewNMkAIiU).**
+##### Fixed
+- If last element of last row of form with Grid theme is hidden, the cells of that last row are not resized properly in the print view.
+- Textareas not resizing in pages mode when loading large text values on non-first pages.
+
+[1.86.2] - 2020-03-18
+----------------------
+##### Changed
+- Updated Swedish, Dutch and Spanish translations of modal dialog introduced in 1.86.1.
+
+[1.86.1] - 2020-03-12
+----------------------
+##### Changed
+- Added modal dialog for offline-capable views that will assist users with a future technology transition (to Service Workers) in version 2.0.0.
+
+[1.86.0] - 2020-03-11
+----------------------
+##### Changed
+- The checkbox for 'save as draft' in offline-capable views has been replaced with a button.
+- Updated French, Spanish, Dutch, Swedish and Arabic translations.
+
+[1.85.1] - 2020-02-28
+----------------------
+##### Changed
+- Don't load audio and video files (in labels or record) for pdf views. **Warning: requires server to sent proper Content-Type header upon HEAD request.**
+
+##### Fixed
+- `jr:count` does not work if number is provided instead of /path/to/count.
+- Date calculations in readonly fields do not show a value if not loaded from record.
+
+[1.85.0] - 2020-02-14
+-----------------------
+##### Added
+- Support for setvalue action with xforms-value-changed event.
+- Basic support for "thousands-sep" appearance on integer and decimal fields.
+
+##### Changed
+- "valuechange" event was changed to "xforms-value-changed"
+- The `odk:generated-by` attribute check on the primary instance (introduced in 1.83.0), was changed to a check for `odk:xforms-version` on the model node.
+
+##### Fixed
+- Text-print widget causes double URL to be shown in print view for URL widget.
+- Last row of Grid Theme form may have incorrect cell heights in print view.
+- Readonly month-year or year inputs show full underlying value instead of month-year/year.
+
+[1.84.1] - 2020-01-31
+----------------------
+##### Changed
+- No longer trigger an inputupdate event when loading an existing itemset value.
+
+##### Fixed
+- The `grunt build-ie11` task does not build minified javascript files, causing everything to fail in production mode.
+
+[1.84.0] - 2020-01-28
+----------------------
+##### Removed
+- Building IE11 bundle automatically (now requires manual `grunt build-ie11`).
+
+##### Changed
+- Added warning for IE11 users that support is dropping soon.
+
+##### Fixed
+- **/api/v2/survey/preview/iframe** did not return a `preview_iframe_url` property.
+- Exception occurs when first repeat is created that contains a calculation if `validateContinuously` is set to `true`.
+- Rows are not always stretching correctly when printing Grid Theme forms.
+
+[1.83.5] - 2020-01-22
 ---------------------
+##### Fixed
+- Text-print widget is also instantiated for comment widgets, causing an issue for a customized Enketo Express application.
+- If repeats are removed in pages mode, the pages get messed up.
+- If repeats are added in pages mode during form load (default instances or loading existing record with multiple instances), the Next/Back buttons are not updated when they should be.
+
+[1.83.4] - 2020-01-21
+---------------------
+##### Fixed
+- Forms in pages mode sometimes do not show correct first page upon load (regression since 1.83.0).
+- Forms in pages mode with groups or repeats without field-list appearance show empty pages (regression since 1.83.0).
+
+[1.83.3] - 2020-01-20
+---------------------
+##### Fixed
+- Radiobutton questions inside repeats allow multiple selections (regression since 1.83.0).
+- Comment questions in a form in Pages mode without field-list appearances, add an empty page.
+
+[1.83.2] - 2020-01-10
+---------------------
+##### Changed
+- Made PDF timeout configurable.
+  
+##### Fixed
+- Error code returned by PDF endpoint is always 500 even when a more specific helpful code is available.
+- Overflowing content in text form controls is not shown on printout. **WARNING: you may have to enable the new 'text-print' widget in config.json if you are overwriting the default widgets config.**
+- Annotation and draw widget on mobile devices slightly decrease image size every time a switch between fullscreen (draw) view and full form view.
+- Annotation widget on mobile devices reveals keyboard when the colorpicker is clicked.
+
+[1.83.1] - 2020-01-06
+----------------------
+##### Changed
+- Updated Spanish and French translations.
+
+##### Fixed
+- Annotate widget broken when uploading new image.
+
+[1.83.0] - 2020-01-03
+---------------------
+##### Added
+- Support for setvalue with odk-new-repeat and odk-instance-first-load events.
+
+##### Fixed
+- Forms with a `odk:generated-by` attribute on the primary instance child, will always have absolute repeat node references evaluated correctly (e.g. for forms generated by pyxform 1.0.0 onwards).
+
+[1.82.0] - 2019-12-18
+---------------------
+##### Added
+- Support for default drawings in all 3 drawing widgets.
+  
 ##### Fixed
 - Some PDF viewers do not show radiobuttons with an opacity (e.g. a disabled radio button).
 - MS Edge does not show any checkmarks in printouts of radiobuttons and checkboxes.
