@@ -86,7 +86,7 @@ function _init( formParts ) {
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
         } ).then( () => {
-            $( 'head>title' ).text('Survea' - $( '#form-title' ).text() );
+            $( 'head>title' ).text('Survea - ' + $( '#form-title' ).text() );
             if ( settings.print ) {
                 gui.applyPrintStyle();
             }

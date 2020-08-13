@@ -42,3 +42,28 @@
 @import "../../../../node_modules/enketo-core/src/sass/core/iefix";
 @import "../../../../node_modules/enketo-core/src/sass/formhub/iefix";
 @import "../../../../node_modules/enketo-core/src/sass/grid/iefix";
+
+// Style Survea
+#form-title,
+.or>h4,
+.or-group>h4 {
+    color:#418ccb
+}
+.or-group:not(.or-appearance-no-collapse)>h4::before{
+    border-top-color: #418ccb;
+}
+.form-progress{
+    background-color: #418ccb;
+}
+
+.btn:hover,
+.vex.vex-theme-plain .vex-dialog-button:hover,
+.btn:focus,
+.vex.vex-theme-plain .vex-dialog-button:focus{
+    background-color: #225d8f;
+}
+.btn,
+.vex.vex-theme-plain .vex-dialog-button{
+    background-color: #418ccb;
+    border-color: #225d8f;
+}
