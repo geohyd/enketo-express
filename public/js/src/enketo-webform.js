@@ -189,7 +189,7 @@ function _init( formParts ) {
                     instanceStr: _prepareInstance( formParts.model, settings.defaults ),
                     external: formParts.externalData,
                 } ).then( form => {
-                    $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
+                    $( 'head>title' ).text('Survea -' + utils.getTitleFromFormStr( formParts.form ) );
                     formParts.$form = form.view.$;
                     if ( settings.print ) {
                         gui.applyPrintStyle();

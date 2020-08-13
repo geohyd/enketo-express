@@ -60,7 +60,7 @@ function _init( formParts ) {
             external: formParts.externalData,
             instanceAttachments: formParts.instanceAttachments,
         } ).then( () => {
-            $( 'head>title' ).text( utils.getTitleFromFormStr( formParts.form ) );
+            $( 'head>title' ).text( 'Survea - ' + utils.getTitleFromFormStr( formParts.form ) );
         } );
     } );
 }
