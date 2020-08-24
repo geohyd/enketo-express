@@ -1,0 +1,146 @@
+// variables, in the right order
+@import "variables";
+@import "../component/variables";
+@import "../../../../node_modules/enketo-core/src/sass/formhub/variables";
+@import "../../../../node_modules/enketo-core/src/sass/core/variables";
+
+// fonts
+@import "../component/fonts";
+
+// mixins, in the right order
+@import "../../../../node_modules/enketo-core/src/sass/core/mixins";
+@import "../../../../node_modules/enketo-core/src/sass/formhub/mixins";
+@import "../component/mixins";
+
+// reset
+@import "../../../../node_modules/enketo-core/src/sass/core/reset";
+
+// common styles
+@import "../component/common-ui";
+
+// utilities
+@import "../../../../node_modules/enketo-core/src/sass/core/utilities";
+
+// icons
+@import "../component/icons";
+
+// buttons
+@import "../component/buttons";
+
+// layout
+@import "../../../../node_modules/enketo-core/src/sass/core/layout";
+@import "../../../../node_modules/enketo-core/src/sass/core/pages";
+
+// components
+@import "../component/side-slider";
+@import "../theme-formhub/form_formhub";
+@import "../component/form_header";
+@import "../component/form_footer";
+
+// IE11 patches
+@import "../../../../node_modules/enketo-core/src/sass/core/iefix";
+@import "../../../../node_modules/enketo-core/src/sass/formhub/iefix";
+
+[data-name$="LITHO"] .add-repeat-btn,
+[data-name$="SONDAGE-REMARQUES"] .add-repeat-btn,
+[data-name$="PHOTOSOTHER"] .add-repeat-btn {
+    background: #325e85;
+    color: #FFF
+}
+[data-name$="LITHO"],
+[data-name$="SONDAGE-REMARQUES"],
+[data-name$="PHOTOSOTHER"] {
+    background: #ebf2f8;
+    padding-bottom: 1px;
+}
+#submit-form{
+    background: #669d3a;
+    font-weight: bold;
+    border-color: #527b30;
+}
+
+[data-name$="LITHO"] .add-repeat-btn i::after {
+    content: 'Ajouter une Lithologie';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="LITHO"] .remove i::after {
+    content: 'Supprimer cette lithologie';
+    font-size: 11px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[data-name$="FLACON"] {
+    background: #ebf2f8;
+    padding-bottom: 1px
+}
+[data-name$="FLACON"] .add-repeat-btn i::after {
+    content: 'Ajouter un Flacon';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="FLACON"] .remove i::after {
+    content: 'Supprimer ce flacon'!important;
+    font-size:11px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[data-name$="ECHANTILLON"] {
+    background: white;
+    padding-bottom:1px
+}
+[data-name$="ECHANTILLON"] .add-repeat-btn i::after {
+    content: 'Ajouter un Echantillon';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="ECHANTILLON"] .remove i::after{
+    content: 'Supprimer cet échantillon';
+     font-size:11px;
+     font-family: 'OpenSans', Arial, sans-serif;
+}
+[data-name$="LITHODESC"] {
+    background: white;
+    padding-bottom: 1px
+}
+[data-name$="LITHODESC"] .add-repeat-btn i::after {
+    content: 'Ajouter une description lithologique';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="LITHODESC"] .remove i::after {
+    content: 'Supprimer cette desc. lithologique' !important;
+    font-size: 11px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[data-name$="SONDAGE-REMARQUES"] .add-repeat-btn i::after {
+    content: 'Ajouter une remarque';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="SONDAGE-REMARQUES"] .remove i::after {
+    content: 'Supprimer cette remarque' !important;
+    font-size: 11px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+
+[data-name$="PHOTOSOTHER"] .add-repeat-btn i::after {
+    content: 'Ajouter une photo';
+    font-size: 14px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+[name$="PHOTOSOTHER"] .remove i::after {
+    content: 'Supprimer cette photo' !important;
+    font-size: 11px;
+    font-family: 'OpenSans', Arial, sans-serif;
+}
+
+.or-repeat .remove{
+    background: #e25858;
+    color: #FFF;
+    padding: 10px;
+}
+.remove .fa-minus:before,
+.remove .icon-minus:before {
+    content:'\f1f8'
+}
+
+

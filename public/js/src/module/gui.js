@@ -78,6 +78,27 @@ function setEventHandlers() {
         alert( msg, t( 'alert.offlinesupported.heading' ), 'normal' );
     } );
 
+    // use delegated handler because btnBusyState removes button content
+    $( '#save-draft' ).on( 'click', '.save-draft-info', () => {
+        //const icon1 = document.querySelector( '.offline-enabled__queue-length' ).cloneNode( true );
+        //icon1.style.border = '1px solid #ccc';
+        const icon = document.querySelector( '.side-slider__toggle' ).cloneNode( true );
+        icon.removeAttribute( 'aria-label' );
+        icon.style.position = 'static';
+        icon.style[ 'margin' ] = '10px auto';
+        icon.style.display = 'block';
+        icon.disabled = true;
+        const msg = t( 'alert.savedraftinfo.msg', {
+            icon: icon.outerHTML,
+            // switch off escaping just for this known safe value
+            interpolation: {
+                escapeValue: false
+            }
+        } );
+        alert( msg, t( 'alert.savedraftinfo.heading' ), 'normal' );
+
+    } );
+
     $( 'a.branding' ).on( 'click', function() {
         const href = this.getAttribute( 'href' );
         return ( !href || href === '#' ) ? false : true;
@@ -431,7 +452,8 @@ function getPrintDialogComponents() {
 
 function printGrid( format ) {
     const swapped = printHelper.styleToAll();
-    return printHelper.fixGrid( format )
+    return printHelper.fixGrid( format, 800 )
+        .then( _delay )
         .then( window.print )
         .catch( console.error )
         .then( () => {
@@ -444,6 +466,12 @@ function printGrid( format ) {
                 } );
             }
         } );
+}
+
+function _delay( delay = 400 ) {
+    return new Promise( ( resolve ) => {
+        setTimeout( resolve, delay );
+    } );
 }
 
 /**
@@ -505,6 +533,7 @@ function alertCacheUnsupported() {
 updateStatus = {
     offlineCapable( offlineCapable ) {
         if ( offlineCapable ) {
+
             $( '.offline-enabled__icon.not-enabled' ).removeClass( 'not-enabled' );
         } else {
             $( '.offline-enabled__icon' ).addClass( 'not-enabled' );
