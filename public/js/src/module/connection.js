@@ -35,7 +35,7 @@ function getOnlineStatus() {
  * Uploads a complete record
  *
  * @param  {{xml: string, files: [File]}} record
- * @return {Promise}
+ * @return { Promise }
  */
 function uploadRecord( record ) {
     let batches;
@@ -51,11 +51,12 @@ function uploadRecord( record ) {
         batch.deprecatedId = record.deprecatedId;
     } );
 
-    // Perform batch uploads sequentially for to avoid issues when connections are very poor and 
+    // Perform batch uploads sequentially for to avoid issues when connections are very poor and
     // a serious issue with ODK Aggregate (https://github.com/kobotoolbox/enketo-express/issues/400)
     return batches.reduce( ( prevPromise, batch ) => prevPromise.then( () => _uploadBatch( batch ) ), Promise.resolve() )
         .then( results => {
             console.log( 'results of all batches submitted', results );
+
             return results[ 0 ];
         } );
 }
@@ -63,8 +64,8 @@ function uploadRecord( record ) {
 /**
  * Uploads a single batch of a single record.
  *
- * @param  {{formData: FormData, failedFiles: [string]}} data formData object to send
- * @return {Promise}      [description]
+ * @param {{formData: FormData, failedFiles: [string]}} recordBatch - formData object to send
+ * @return { Promise }      [description]
  */
 function _uploadBatch( recordBatch ) {
     return new Promise( ( resolve, reject ) => {
@@ -73,18 +74,18 @@ function _uploadBatch( recordBatch ) {
         const submissionUrl = ( settings.enketoId ) ? `${settings.basePath}/submission/${settings.enketoId}${_getQuery()}` : null;
 
         $.ajax( submissionUrl, {
-                type: 'POST',
-                data: recordBatch.formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-OpenRosa-Version': '1.0',
-                    'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
-                    'X-OpenRosa-Instance-Id': recordBatch.instanceId
-                },
-                timeout: settings.timeout
-            } )
+            type: 'POST',
+            data: recordBatch.formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-OpenRosa-Version': '1.0',
+                'X-OpenRosa-Deprecated-Id': recordBatch.deprecatedId,
+                'X-OpenRosa-Instance-Id': recordBatch.instanceId
+            },
+            timeout: settings.timeout
+        } )
             .done( ( data, textStatus, jqXHR ) => {
                 const result = {
                     status: jqXHR.status,
@@ -118,12 +119,13 @@ function _uploadBatch( recordBatch ) {
 /**
  * Builds up a record array including media files, divided into batches
  *
- * @param { { name: string, data: string } } record[ description ]
+ * @param { { name: string, data: string } } record - record object
  */
 function _prepareFormDataArray( record ) {
     const recordDoc = parser.parseFromString( record.xml, 'text/xml' );
     const fileElements = Array.prototype.slice.call( recordDoc.querySelectorAll( '[type="file"]' ) ).map( el => {
         el.removeAttribute( 'type' );
+
         return el;
     } );
     const xmlData = new XMLSerializer().serializeToString( recordDoc.documentElement );
@@ -149,8 +151,10 @@ function _prepareFormDataArray( record ) {
         availableFiles.some( f => {
             if ( f.name === fileName ) {
                 file = f;
+
                 return true;
             }
+
             return false;
         } );
 
@@ -178,6 +182,8 @@ function _prepareFormDataArray( record ) {
         const fd = new FormData();
 
         fd.append( 'xml_submission_file', xmlSubmissionBlob, 'xml_submission_file' );
+        const csrfToken = ( document.cookie.split( '; ' ).find( c => c.startsWith( '__csrf' ) ) || '' ).split( '=' )[1];
+        if ( csrfToken ) fd.append( '__csrf', csrfToken );
 
         // batch with XML data
         batchPrepped = {
@@ -202,8 +208,8 @@ function _prepareFormDataArray( record ) {
 /**
  * splits an array of file sizes into batches (for submission) based on a limit
  *
- * @param  {Array.<number>} fileSizes   array of file sizes
- * @param  {number}     limit   limit in byte size of one chunk (can be exceeded for a single item)
+ * @param  {Array.<number>} fileSizes -   array of file sizes
+ * @param  {number}     limit -   limit in byte size of one chunk (can be exceeded for a single item)
  * @return {Array.<Array.<number>>} array of arrays with index, each secondary array of indices represents a batch
  */
 
@@ -251,7 +257,7 @@ function _divideIntoBatches( fileSizes, limit ) {
 /**
  * Returns the value of the X-OpenRosa-Content-Length header returned by the OpenRosa server for this form.
  *
- * @return {Promise} [description]
+ * @return { Promise } [description]
  */
 function getMaximumSubmissionSize() {
     let maxSubmissionSize;
@@ -260,10 +266,10 @@ function getMaximumSubmissionSize() {
 
         if ( MAX_SIZE_URL ) {
             $.ajax( MAX_SIZE_URL, {
-                    type: 'GET',
-                    timeout: 5 * 1000,
-                    dataType: 'json'
-                } )
+                type: 'GET',
+                timeout: 5 * 1000,
+                dataType: 'json'
+            } )
                 .done( response => {
                     if ( response && response.maxSize && !isNaN( response.maxSize ) ) {
                         maxSubmissionSize = ( Number( response.maxSize ) > ABSOLUTE_MAX_SIZE ) ? ABSOLUTE_MAX_SIZE : Number( response.maxSize );
@@ -286,21 +292,22 @@ function getMaximumSubmissionSize() {
 /**
  * Obtains HTML Form, XML Model and External Instances
  *
- * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=}  options
- * @return { Promise }
+ * @param { object } props - form properties object
+ * @return { Promise } a Promise that resolves with a form parts object
  */
 function getFormParts( props ) {
     let error;
+
     //TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_URL + _getQuery(), {
-                type: 'POST',
-                data: {
-                    serverUrl: props.serverUrl,
-                    xformId: props.xformId,
-                    xformUrl: props.xformUrl
-                }
-            } )
+            type: 'POST',
+            data: {
+                serverUrl: props.serverUrl,
+                xformId: props.xformId,
+                xformUrl: props.xformUrl
+            }
+        } )
             .done( data => {
                 data.enketoId = props.enketoId;
                 data.theme = data.theme || utils.getThemeFromFormStr( data.form ) || settings.defaultTheme;
@@ -339,6 +346,7 @@ function _getExternalData( survey ) {
                 tasks.push( _getDataFile( instance.src, survey.languageMap )
                     .then( xmlData => {
                         instance.xml = xmlData;
+
                         return instance;
                     } )
                     .catch( e => {
@@ -361,11 +369,13 @@ function _getExternalData( survey ) {
  * Obtains a media file
  * JQuery ajax doesn't support blob responses, so we're going native here.
  *
- * @return {Promise} [description]
+ * @param { string } url - a URL to a media file
+ * @return {Promise<{url: string, item: Blob}>} a Promise that resolves with a media file object
  */
 function getMediaFile( url ) {
     let error;
     const xhr = new XMLHttpRequest();
+
     // TODO: use fetch
     return new Promise( ( resolve, reject ) => {
         xhr.onreadystatechange = function() {
@@ -394,13 +404,17 @@ function getMediaFile( url ) {
 /**
  * Obtains a data/text file
  *
- * @return {Promise} [description]
+ * @param { string } url - URL to data tile
+ * @param {object } languageMap - language map object with language name properties and IANA subtag values
+ * @return {Promise<XMLDocument>} a Promise that resolves with an XML Document
  */
 function _getDataFile( url, languageMap ) {
     let contentType;
+
     return fetch( url )
         .then( response => {
             contentType = response.headers.get( 'Content-Type' ).split( ';' )[ 0 ];
+
             return response.text();
         } )
         .then( responseText => {
@@ -434,7 +448,8 @@ function _getDataFile( url, languageMap ) {
 /**
  * Extracts version from service worker script
  *
- * @return {Promise} [description]
+ * @param { string } serviceWorkerUrl - service worker URL
+ * @return {Promise<string>} a Promise that resolves with the version of the service worker or 'unknown'
  */
 function getServiceWorkerVersion( serviceWorkerUrl ) {
 
@@ -444,6 +459,7 @@ function getServiceWorkerVersion( serviceWorkerUrl ) {
         } )
         .then( text => {
             const matches = text.match( /version\s?=\s?'([^\n]+)'/ );
+
             return matches ? matches[ 1 ] : 'unknown';
         } );
 }
@@ -454,8 +470,8 @@ function getFormPartsHash() {
 
     return new Promise( ( resolve, reject ) => {
         $.ajax( TRANSFORM_HASH_URL + _getQuery(), {
-                type: 'POST'
-            } )
+            type: 'POST'
+        } )
             .done( data => {
                 resolve( data.hash );
             } )
@@ -470,17 +486,17 @@ function getFormPartsHash() {
 /**
  * Obtains XML instance that is cached at the server
  *
- * @param  {{serverUrl: ?string=, formId: ?string=, formUrl: ?string=, enketoId: ?string=, instanceID: string}  options
- * @return { Promise }
+ * @param { object } props - form properties object
+ * @return { Promise<string> } a Promise that resolves with an XML instance as text
  */
 function getExistingInstance( props ) {
     let error;
 
     return new Promise( ( resolve, reject ) => {
         $.ajax( INSTANCE_URL, {
-                type: 'GET',
-                data: props
-            } )
+            type: 'GET',
+            data: props
+        } )
             .done( data => {
                 resolve( data );
             } )

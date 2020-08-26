@@ -6,28 +6,22 @@ import gui from './gui';
 import connection from './connection';
 import settings from './settings';
 import { Form } from 'enketo-core';
-import { updateDownloadLink } from 'enketo-core/src/js/utils';
+import downloadUtils from 'enketo-core/src/js/download-utils';
 import events from './event';
 import fileManager from './file-manager';
-import { t } from './translator';
+import { t, localize, getCurrentUiLanguage, getDesiredLanguage } from './translator';
 import records from './records-queue';
 import $ from 'jquery';
 import encryptor from './encryptor';
 
 let form;
-let formSelector;
 let formData;
 let formprogress;
 const formOptions = {
-    clearIrrelevantImmediately: false,
-    printRelevantOnly: settings.printRelevantOnly
+    printRelevantOnly: settings.printRelevantOnly,
 };
 
-function init( selector, data ) {
-    let advice;
-    let loadErrors = [];
-
-    formSelector = selector;
+function init( formEl, data ) {
     formData = data;
 
     return _initializeRecords()
@@ -38,12 +32,23 @@ function init( selector, data ) {
                 data.instanceStr = record.xml;
             }
 
+            if ( record && record.draft ) {
+                // Make sure that Enketo Core won't do the instanceID --> deprecatedID move
+                data.submitted = false;
+            }
+
             if ( data.instanceAttachments ) {
                 fileManager.setInstanceAttachments( data.instanceAttachments );
             }
 
-            form = new Form( formSelector, data, formOptions );
-            loadErrors = form.init();
+            if ( getCurrentUiLanguage() === getDesiredLanguage() ) {
+                formOptions.language = getCurrentUiLanguage();
+            } else {
+                formOptions.language = getDesiredLanguage();
+            }
+
+            form = new Form( formEl, data, formOptions );
+            let loadErrors = form.init();
 
             // Remove loader. This will make the form visible.
             // In order to aggregate regular loadErrors and GoTo loaderrors,
@@ -51,7 +56,7 @@ function init( selector, data ) {
             $( '.main-loader' ).remove();
 
             if ( settings.goTo && location.hash ) {
-                loadErrors = loadErrors.concat( form.goTo( location.hash.substring( 1 ) ) );
+                loadErrors = loadErrors.concat( form.goTo( decodeURIComponent( location.hash.substring( 1 ) ).split( '#' )[ 0 ] ) );
             }
 
             if ( form.encryptionKey ) {
@@ -73,18 +78,7 @@ function init( selector, data ) {
                 throw loadErrors;
             }
 
-
             return form;
-        } )
-        .catch( error => {
-            if ( Array.isArray( error ) ) {
-                loadErrors = error;
-            } else {
-                loadErrors.unshift( error.message || t( 'error.unknown' ) );
-            }
-
-            advice = ( data.instanceStr ) ? t( 'alert.loaderror.editadvice' ) : t( 'alert.loaderror.entryadvice' );
-            gui.alertLoadErrors( loadErrors, advice );
         } );
 }
 
@@ -92,6 +86,7 @@ function _initializeRecords() {
     if ( !settings.offline ) {
         return Promise.resolve();
     }
+
     return records.init();
 }
 
@@ -100,10 +95,12 @@ function _checkAutoSavedRecord() {
     if ( !settings.offline ) {
         return Promise.resolve();
     }
+
     return records.getAutoSavedRecord()
         .then( record => {
             if ( record ) {
                 rec = record;
+
                 return gui.confirm( {
                     heading: t( 'confirm.autosaveload.heading' ),
                     msg: t( 'confirm.autosaveload.msg' ),
@@ -127,7 +124,8 @@ function _checkAutoSavedRecord() {
 
 /**
  * Controller function to reset to a blank form. Checks whether all changes have been saved first
- * @param  {boolean=} confirmed Whether unsaved changes can be discarded and lost forever
+ *
+ * @param  {boolean=} confirmed - Whether unsaved changes can be discarded and lost forever
  */
 function _resetForm( confirmed ) {
     let message;
@@ -141,14 +139,14 @@ function _resetForm( confirmed ) {
                 }
             } );
     } else {
-        form.resetView();
-        form = new Form( formSelector, {
+        const formEl = form.resetView();
+        form = new Form( formEl, {
             modelStr: formData.modelStr,
             external: formData.external
         }, formOptions );
         const loadErrors = form.init();
         // formreset event will update the form media:
-        form.view.$.trigger( 'formreset' );
+        form.view.html.dispatchEvent( events.FormReset() );
         if ( records ) {
             records.setActive( null );
         }
@@ -161,8 +159,8 @@ function _resetForm( confirmed ) {
 /**
  * Loads a record from storage
  *
- * @param  {string} instanceId [description]
- * @param  {=boolean?} confirmed  [description]
+ * @param  { string } instanceId - [description]
+ * @param  {=boolean?} confirmed -  [description]
  */
 function _loadRecord( instanceId, confirmed ) {
     let texts;
@@ -190,8 +188,8 @@ function _loadRecord( instanceId, confirmed ) {
                     return gui.alert( t( 'alert.recordnotfound.msg' ) );
                 }
 
-                form.resetView();
-                form = new Form( formSelector, {
+                const formEl = form.resetView();
+                form = new Form( formEl, {
                     modelStr: formData.modelStr,
                     instanceStr: record.xml,
                     external: formData.external,
@@ -199,7 +197,7 @@ function _loadRecord( instanceId, confirmed ) {
                 }, formOptions );
                 loadErrors = form.init();
                 // formreset event will update the form media:
-                form.view.$.trigger( 'formreset' );
+                form.view.html.dispatchEvent( events.FormReset() );
                 form.recordName = record.name;
                 records.setActive( record.instanceId );
 
@@ -235,7 +233,7 @@ function _submitRecord() {
     let msg = '';
     const include = { irrelevant: false };
 
-    form.view.$.trigger( 'beforesave' );
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     beforeMsg = ( redirect ) ? t( 'alert.submission.redirectmsg' ) : '';
     authLink = `<a href="${settings.loginUrl}" target="_blank">${t( 'here' )}</a>`;
@@ -244,10 +242,11 @@ function _submitRecord() {
 
 
 
-    return new Promise( resolve => {
+    return fileManager.getCurrentFiles()
+        .then( files => {
             const record = {
                 'xml': form.getDataStr( include ),
-                'files': fileManager.getCurrentFiles(),
+                'files': files,
                 'instanceId': form.instanceID,
                 'deprecatedId': form.deprecatedID
             };
@@ -258,9 +257,10 @@ function _submitRecord() {
                     id: form.view.html.id, // TODO: after enketo-core support, use form.id
                     version: form.version,
                 };
-                resolve( encryptor.encryptRecord( formProps, record ) );
+
+                return encryptor.encryptRecord( formProps, record );
             } else {
-                resolve( record );
+                return record;
             }
         } )
         .then( connection.uploadRecord )
@@ -270,9 +270,9 @@ function _submitRecord() {
 
             if ( result.failedFiles && result.failedFiles.length > 0 ) {
                 msg = `${t( 'alert.submissionerror.fnfmsg', {
-    failedFiles: result.failedFiles.join( ', ' ),
-    supportEmail: settings.supportEmail
-} )}<br/>`;
+                    failedFiles: result.failedFiles.join( ', ' ),
+                    supportEmail: settings.supportEmail
+                } )}<br/>`;
                 level = 'warning';
             }
 
@@ -285,21 +285,21 @@ function _submitRecord() {
                     const age = 31536000;
                     const d = new Date();
                     /**
-                     * Manipulate the browser history to work around potential ways to 
+                     * Manipulate the browser history to work around potential ways to
                      * circumvent protection against multiple submissions:
                      * 1. After redirect, click Back button to load cached version.
                      */
                     history.replaceState( {}, '', `${settings.defaultReturnUrl}?taken=${now.getTime()}` );
                     /**
-                     * The above replaceState doesn't work in Safari and probably in 
-                     * some other browsers (mobile). It shows the 
+                     * The above replaceState doesn't work in Safari and probably in
+                     * some other browsers (mobile). It shows the
                      * final submission dialog when clicking Back.
                      * So we remove the form...
                      */
                     $( 'form.or' ).empty();
                     $( 'button#submit-form' ).remove();
                     d.setTime( d.getTime() + age * 1000 );
-                    document.cookie = `${settings.enketoId}=${now.getTime()};path=/single;max-age=${age};expires=${d.toGMTString()};`;
+                    document.cookie = `${settings.enketoId}=${now.getTime()};path=${settings.basePath}/single;max-age=${age};expires=${d.toGMTString()};`;
                 }
                 msg += t( 'alert.submissionsuccess.redirectmsg' );
                 gui.alert( msg, t( 'alert.submissionsuccess.heading' ), level );
@@ -363,8 +363,8 @@ function _confirmRecordName( recordName, errorMsg ) {
 function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
     const include = { irrelevant: draft };
 
-    // triggering "beforesave" event to update possible "timeEnd" meta data in form
-    form.view.$.trigger( 'beforesave' );
+    // triggering "before-save" event to update possible "timeEnd" meta data in form
+    form.view.html.dispatchEvent( events.BeforeSave() );
 
     // check recordName
     if ( !recordName ) {
@@ -379,7 +379,8 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             .catch( () => {} );
     }
 
-    return new Promise( resolve => {
+    return fileManager.getCurrentFiles()
+        .then( files => {
             // build the record object
             const record = {
                 'draft': draft,
@@ -388,7 +389,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
                 'instanceId': form.instanceID,
                 'deprecateId': form.deprecatedID,
                 'enketoId': settings.enketoId,
-                'files': fileManager.getCurrentFiles()
+                'files': files
             };
 
             // encrypt the record
@@ -398,9 +399,10 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
                     id: form.view.html.id, // TODO: after enketo-core support, use form.id
                     version: form.version,
                 };
-                resolve( encryptor.encryptRecord( formProps, record ) );
+
+                return encryptor.encryptRecord( formProps, record );
             } else {
-                resolve( record );
+                return record;
             }
         } ).then( record => {
             // Change file object for database, not sure why this was chosen.
@@ -413,7 +415,7 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
 
             // Save the record, determine the save method
             const saveMethod = form.recordName ? 'update' : 'set';
-            console.log( 'saving record with', saveMethod, record );
+
             return records[ saveMethod ]( record );
         } )
         .then( () => {
@@ -422,13 +424,13 @@ function _saveRecord( draft = true, recordName, confirmed, errorMsg ) {
             _resetForm( true );
 
             if ( draft ) {
-                gui.feedback( t( 'alert.recordsavesuccess.draftmsg' ), 3 );
+                gui.alert( t( 'alert.recordsavesuccess.draftmsg' ), t( 'alert.savedraftinfo.heading' ), 'info', 5 );
             } else {
-                gui.feedback( t( 'alert.recordsavesuccess.finalmsg' ), 3 );
+                gui.alert( `${t( 'record-list.msg2' )}`, t( 'alert.recordsavesuccess.finalmsg' ), 'info', 10 );
                 // The timeout simply avoids showing two messages at the same time:
                 // 1. "added to queue"
                 // 2. "successfully submitted"
-                setTimeout( records.uploadQueue, 5 * 1000 );
+                setTimeout( records.uploadQueue, 10 * 1000 );
             }
         } )
         .catch( error => {
@@ -450,19 +452,21 @@ function _autoSaveRecord() {
         return Promise.resolve();
     }
 
-    // build the variable portions of the record object
-    const record = {
-        'xml': form.getDataStr(),
-        'files': fileManager.getCurrentFiles().map( file => ( typeof file === 'string' ) ? {
-            name: file
-        } : {
-            name: file.name,
-            item: file
-        } )
-    };
+    return fileManager.getCurrentFiles()
+        .then( files => {
+            // build the variable portions of the record object
+            const record = {
+                'xml': form.getDataStr(),
+                'files': files.map( file => ( typeof file === 'string' ) ? {
+                    name: file
+                } : {
+                    name: file.name,
+                    item: file
+                } )
+            };
 
-    // save the record
-    return records.updateAutoSavedRecord( record )
+            return records.updateAutoSavedRecord( record );
+        } )
         .then( () => {
             console.log( 'autosave successful' );
         } )
@@ -497,6 +501,7 @@ function _setEventHandlers() {
                     $button.btnBusyState( false );
                 } );
         }, 100 );
+
         return false;
     } );
 
@@ -542,6 +547,7 @@ function _setEventHandlers() {
                     } );
             }, 100 );
         }
+
         return false;
     } );
 
@@ -552,6 +558,7 @@ function _setEventHandlers() {
         setTimeout( () => {
             location.href = decodeURIComponent( settings.returnUrl || settings.defaultReturnUrl );
         }, 300 );
+
         return false;
     } );
 
@@ -612,8 +619,25 @@ function _setEventHandlers() {
         } ), 7 );
     } );
 
+    // This actually belongs in gui.js but that module doesn't have access to the form object.
+    // Enketo core takes care of language switching of the form itself, i.e. all language strings in the form definition.
+    // This handler does the UI around the form, as well as the UI inside the form that are part of the application.
+    const formLanguages = document.querySelector( '#form-languages' );
+    if ( formLanguages ) {
+        formLanguages.addEventListener( events.Change().type, event => {
+            event.preventDefault();
+            console.log( 'ready to set UI lang', form.langs.currentLang );
+            localize( document.querySelector( 'body' ), form.langs.currentLang )
+                .then( dir => document.querySelector( 'html' ).setAttribute( 'dir', dir ) );
+        } );
+    }
+
     if ( settings.offline ) {
-        document.addEventListener( events.XFormsValueChanged().type, _autoSaveRecord );
+        document.addEventListener( events.XFormsValueChanged().type, () => {
+            // The delay works around an issue with drawing widgets, where the canvas
+            // capture is an empty image. https://github.com/enketo/enketo-express/issues/174
+            setTimeout( _autoSaveRecord, 500 );
+        } );
     }
 }
 
@@ -621,7 +645,7 @@ function updateDownloadLinkAndClick( anchor, file ) {
     const objectUrl = URL.createObjectURL( file );
 
     anchor.textContent = file.name;
-    updateDownloadLink( anchor, objectUrl, file.name );
+    downloadUtils.updateDownloadLink( anchor, objectUrl, file.name );
     anchor.click();
 }
 
@@ -630,9 +654,10 @@ function setLogoutLinkVisibility() {
     $( '.form-footer .logout' ).toggleClass( 'hide', !visible );
 }
 
-/** 
+/**
  * Determines whether the page is loaded inside an iframe
- * @return {boolean} [description]
+ *
+ * @return { boolean } [description]
  */
 function inIframe() {
     try {
@@ -644,7 +669,8 @@ function inIframe() {
 
 /**
  * Attempts to send a message to the parent window, useful if the webform is loaded inside an iframe.
- * @param  {{type: string}} event
+ *
+ * @param  {Event} event - event
  */
 function postEventAsMessageToParentWindow( event ) {
     if ( event && event.type ) {
