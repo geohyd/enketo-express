@@ -1,4 +1,28 @@
 {
+	"survea": {
+		"name-or-label-error" : "Nom ou label erroné ",
+		"source-error" : "Lien de la source externe incorrect",
+		"offline" : "Le navigateur est hors-ligne",
+		"gpsdenied": "Géolocalisation refusée",
+		"apierror": "Erreur API",
+		"geolocation": "Géolocalisation",
+		"number" : "N°",
+		"street" : "Rue",
+		"city" : "Ville",
+		"unknown": "<Nom Inconnu>",
+		"search": "Chercher...",
+		"sttNotAvailable": "Reconnaissance vocale impossible",  
+		"startRecording": "Démarrer la reconnaissance",
+		"widget": {
+			"barcode": {
+				"configPopup": {
+					"title": "Configuration du scanner de code barre",
+					"fieldType": "Type de code barre",
+					"fieldDeviceId": "Caméra"
+				}
+			}
+		}
+	},
     "advanced": {
         "flushdb": "Effacer la mémoire"
     },

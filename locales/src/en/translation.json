@@ -1,4 +1,29 @@
 {
+	"survea": { 
+		"name-or-label-error" : "Name or label error",
+		"source-error" : "Source url error",
+		"offline" : "Navigator is offline",
+		"gpsdenied": "Geolocation denied",
+		"apierror": "API error",
+		"geolocation": "Geolocation",
+		"number" : "Nbr",
+		"street" : "Street",
+		"city" : "City",
+		"unknown": "<Unknown Name>",
+		"search": "Search...",
+		"sttNotAvailable": "Speech to Text not available",  
+		"startRecording": "Start recording",
+		"widget": {
+			"barcode": {
+				"configPopup": {
+					"title": "Barcode scanner configuration",
+					"fieldType": "Barcode type",
+					"fieldDeviceId": "Device"
+				}
+			}
+		}
+	},
+
     "advanced": {
         "flushdb": "Clear Storage"
     },
