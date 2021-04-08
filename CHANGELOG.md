@@ -2,6 +2,50 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.6.0] - 2020-12-28
+----------------------
+##### Changed
+- Vastly improved performance for most slow forms by replacing the XPath evaluator. See [blog post](https://blog.enketo.org/performance-leap/).
+
+[2.5.6] - 2020-12-23
+-----------------------
+##### Fixed
+- A form with a repeat count that has a relevant, will not create the required amount of repeats when loading an existing record.
+
+[2.5.5] - 2020-12-22
+-----------------------
+##### Fixed
+- Readonly views load with a TypeError.
+- If the same repeat question has both a setvalue/odk-instance-first-load as well as a setvalue/xforms-value-changed, the output can get messed up.
+
+[2.5.4] - 2020-12-18
+-----------------------
+##### Fixed
+- The setvalue/odk-instance-first-load default in the first repeat instance is not populated if that repeat or question is non-relevant upon load.
+- If the result of a non-first setvalue/odk-new-repeat calculation is an empty string but the first repeat instance has a non-empty default for that question, the view will show the non-empty default (model is correct).
+
+[2.5.3] - 2020-12-16
+-----------------------
+##### Fixed
+- An exception occurs when a repeat is deleted.
+- When a calculation becomes non-relevant, values are sometimes cleared (they should stay).
+- The input field of a readonly question without a calculation but with a triggered setvalue/xforms-value-changed action remains hidden.
+- Calculation updates do not trigger setvalue/xforms-value-changed actions.
+
+[2.5.2] - 2020-12-04
+-----------------------
+##### Changed
+- setvalue/odk-instance-first-load actions without form controls are now evaluated (in form order) before setvalue/odk-instance-first-load actions with form controls (in form order).
+
+[2.5.1] - 2020-12-02
+-----------------------
+##### Fixed
+- Print/pdf view creates image-map that overlaps in cell below with Grid theme.
+- In Safari on MacOS, dates are offset incorrectly by the UTC offset.
+- Grid Theme designed for rows with 9 or 10 cells display 1 cell too many.
+- Inconsistent and unsafe HTML rendering of select minimal labels and values.
+- Primary instance node names starting with underscore followed by number, break autocomplete widget.
+
 [2.5.0] - 2020-11-18
 -----------------------
 ##### Changed
@@ -28,7 +72,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ----------------------
 ##### Changed
 - Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
-- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
+- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.3.8) because it's very common to number labels in forms.
 
 ##### Fixed
 - Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
