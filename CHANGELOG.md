@@ -2,11 +2,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.5.0] - 2020-11-18
+-----------------------
+##### Changed
+- Improved timings of print script for Grid Theme forms.
+- API now returning consistent query parameter names (with underscores, no camelcase).
+- Updated German, Swedish, Dutch, French, Slovak, and Spanish translations.
+
+##### Fixed
+- A missing external data file does not show a loading error if the XForm contains dummy content.
+- Geopicker on mobile devices won't show map any more after first map reveal.
+- jr:choice-name not working for questions with radiobuttons.
+- If a ref or nodeset attribute starts with a space, the absolute path is not determined correctly.
+
+[2.4.0] - 2020-09-28
+----------------------
+##### Changed
+- Client configuration no longer part of JS build.
+
+##### Fixed
+- In custom (OC) analog-scale widget, if the widget itself is a page (not its parent group), it is not hidden when it should be when the page is not current.
+- When pasting an invalid number into a number field with an existing value, the existing value does not get cleared in the model.
+
+[2.3.12] - 2020-08-28
 ----------------------
 ##### Changed
 - Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
 - Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
+
+##### Fixed
+- Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+- Maximum file size of upload questions is displayed using mebibytes (2<sup>20</sup> bytes) instead of megabytes (10<sup>6 bytes).
 
 [2.3.11] - 2020-08-19
 ----------------------
