@@ -2,11 +2,134 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-[Unreleased]
+[2.7.1] - 2021-04-07
+----------------------
+##### Changed
+- Completed Turkish translation.
+
+##### Fixed
+- Some unlaunched previews (using a `form` queryparameter) fail to load.
+
+[2.7.0] - 2021-04-02
+----------------------
+##### Changed
+- Default form languages will now be shown upon load regardless of browser language.
+
+##### Fixed
+- Preview button does not switch to another language.
+- Forms containing select questions with very large lists of options become unbearably slow to validate.
+- Some relevant groups will no longer ignore page break rules.
+- Native XPath functions do not handle node-set arguments.
+
+[2.6.3] - 2021-03-18
+----------------------
+##### Fixed
+- Exception occurs with lazy evaluation of and-or statements.
+
+[2.6.2] - 2021-03-02
+--------------------
+##### Fixed
+- Setvalue/xforms-value-changed inside a select multiple question is not working.
+- Setvalue/xforms-value-changed with trigger inside a repeat and target outside the repeat does not work.
+- A calculation without form control inside a non-relevant repeat with 0 instances, fails to prune non-relevant nodes.
+- Misplaced image-map when used in conjunction with complex custom comment widgets (OC).
+- The function jr:choice-name causes an exception if the choices list of radiobuttons or checkboxes is empty.
+- The function jr:choice-name causes an exception if the choices list of pulldown selects is empty.
+
+[2.6.1] - 2021-02-04
+--------------------
+##### Changed
+- The uuid() XPath function implementation has improved with a reduced chance of collisions.
+
+##### Fixed
+- Readonly views with triggered calculations load with a TypeError.
+- Action setvalue/odk-instance-first-load and setvalue/odk-new-repeat actions are not properly added for radiobutton and checkbox questions (in enketo-transformer).
+- Lazy and/or evaluation within function arguments (in openrosa-xpath-evaluator).
+- Action setvalue/odk-new-repeat does not run non-form-control actions before form controls (since 5.17.0).
+- Static itemsets with radio buttons inside multiple repeat instances do not load correctly.
+- Draw widget changes file name whenever browser window resizes.
+- Draw widget updates file name when canvas loses focus if drawing hasn't changed.
+- Nested XPath expressions with dead branches cause an exception (since 2.6.0).
+- Installation issue in Travis-CI, possible affecting other servers as well.
+
+[2.6.0] - 2020-12-28
+----------------------
+##### Added
+- Support for digest() function.
+
+##### Changed
+- **Vastly improved performance for most slow forms by replacing the XPath evaluator**. See (https://blog.enketo.org/performance-leap/).
+
+[2.5.6] - 2020-12-23
+-----------------------
+##### Fixed
+- A form with a repeat count that has a relevant, will not create the required amount of repeats when loading an existing record.
+
+[2.5.5] - 2020-12-22
+-----------------------
+##### Fixed
+- Readonly views load with a TypeError.
+- If the same repeat question has both a setvalue/odk-instance-first-load as well as a setvalue/xforms-value-changed, the output can get messed up.
+
+[2.5.4] - 2020-12-18
+-----------------------
+##### Fixed
+- The setvalue/odk-instance-first-load default in the first repeat instance is not populated if that repeat or question is non-relevant upon load.
+- If the result of a non-first setvalue/odk-new-repeat calculation is an empty string but the first repeat instance has a non-empty default for that question, the view will show the non-empty default (model is correct).
+
+[2.5.3] - 2020-12-16
+-----------------------
+##### Fixed
+- An exception occurs when a repeat is deleted.
+- When a calculation becomes non-relevant, values are sometimes cleared (they should stay).
+- The input field of a readonly question without a calculation but with a triggered setvalue/xforms-value-changed action remains hidden.
+- Calculation updates do not trigger setvalue/xforms-value-changed actions.
+
+[2.5.2] - 2020-12-04
+-----------------------
+##### Changed
+- setvalue/odk-instance-first-load actions without form controls are now evaluated (in form order) before setvalue/odk-instance-first-load actions with form controls (in form order).
+
+[2.5.1] - 2020-12-02
+-----------------------
+##### Fixed
+- Print/pdf view creates image-map that overlaps in cell below with Grid theme.
+- In Safari on MacOS, dates are offset incorrectly by the UTC offset.
+- Grid Theme designed for rows with 9 or 10 cells display 1 cell too many.
+- Inconsistent and unsafe HTML rendering of select minimal labels and values.
+- Primary instance node names starting with underscore followed by number, break autocomplete widget.
+
+[2.5.0] - 2020-11-18
+-----------------------
+##### Changed
+- Improved timings of print script for Grid Theme forms.
+- API now returning consistent query parameter names (with underscores, no camelcase).
+- Updated German, Swedish, Dutch, French, Slovak, and Spanish translations.
+
+##### Fixed
+- A missing external data file does not show a loading error if the XForm contains dummy content.
+- Geopicker on mobile devices won't show map any more after first map reveal.
+- jr:choice-name not working for questions with radiobuttons.
+- If a ref or nodeset attribute starts with a space, the absolute path is not determined correctly.
+
+[2.4.0] - 2020-09-28
+----------------------
+##### Changed
+- Client configuration no longer part of JS build.
+
+##### Fixed
+- In custom (OC) analog-scale widget, if the widget itself is a page (not its parent group), it is not hidden when it should be when the page is not current.
+- When pasting an invalid number into a number field with an existing value, the existing value does not get cleared in the model.
+
+[2.3.12] - 2020-08-28
 ----------------------
 ##### Changed
 - Build task no longer includes Babel transpilation (possibly affecting support for obscure outdated browsers).
-- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.38) because it's very common to number labels in forms.
+- Ordered markdown lists should always be preceded by a newline character (partially reverted change in 2.3.8) because it's very common to number labels in forms.
+
+##### Fixed
+- Maximum file size of upload questions sometimes reverts to default 5MB if server response is not received quick enough.
+- Maximum file size of upload questions is displayed using mebibytes (2<sup>20</sup> bytes) instead of megabytes (10<sup>6 bytes).
 
 [2.3.11] - 2020-08-19
 ----------------------
