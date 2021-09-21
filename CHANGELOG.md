@@ -2,13 +2,70 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.0.0] - 2021-09-17
+---------------------
+##### Changed
+- Upgraded node, npm, and other dependencies
+
+[2.8.1] - 2021-09-10
+---------------------
+##### Fixed
+- [#293](https://github.com/enketo/enketo-express/pull/293) Form's default media references are removed after submission, image labels not rendered for new forms
+
+[2.8.0] - 2021-07-13
+---------------------
+#### Added
+- Support for odk:setgeopoint for odk-instance-first-load and xforms-value-changed events.
+- Support for [last-saved](https://docs.getodk.org/form-logic/?highlight=last%20saved#values-from-the-last-saved-record) values!
+
+#### Changed
+- Updated Russian translation.
+- Increased maximum number of columns in Grid Theme from 10 to 13.
+
+#### Fixed
+- Range default or loaded value (number) not shown.
+- Distresspicker default or loaded mercury level not shown.
+- Radiobuttons value still shown in view after programmatic clearing (e.g. by a calculation).
+- Triple-nested repeats and higher are not created properly.
+- The "d" query parameter to supply dynamic defaults is decoded twice.
+- Static resources caching at web-server level could break offline functionality.
+- When loading a long text default value into a multiline text widget, it doesn't expand automatically.
+- When using "goto" on a comment question with a form divided into pages, it doesn't open the comment dialog.
+- XPath inconsistencies with date-as-string result formats.
+- XPath Result of if() is no longer cast to a string (recently updated ODK XForms spec).
+
+[2.7.3] - 2021-04-20
+---------------------
+##### Removed
+- `decimal-date()` function (as it was an accident and is not in the spec).
+
+##### Changed
+- Improved accessibility for screen readers.
+- Improved performance.
+
+##### Fixed
+- Using `decimal-time()` with a node-set parameter fails.
+- The not-equals operator fails when preceded by a node-set without a trailing space.
+- Using `uuid()` with a node-set parameter fails.
+- Redirect doesn't work with a base root url.
+
+[2.7.2] - 2021-04-12
+---------------------
+##### Fixed
+- Using `node()` mid-axis, causes an exception.
+- Using `ends-with()` with a node parameter causes an exception.
+- Using `not()` with an empty node-set parameter returns `false`.
+- Using `uuid()` with a node parameter fails.
+- Using `exp()`, `exp10()`, `log()`, `log10()`, `sqrt()` with node-set parameters returns incorrect results.
+- Using `randomize()` with a non-nodeset parameter does not throw an error.
+
 [2.7.1] - 2021-04-07
 ----------------------
 ##### Changed
 - Completed Turkish translation.
 
 ##### Fixed
-- Some unlaunched previews (using a `form` queryparameter) fail to load.
+- Some unlaunched previews (using a `form` query parameter) fail to load.
 
 [2.7.0] - 2021-04-02
 ----------------------
