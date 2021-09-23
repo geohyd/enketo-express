@@ -20,7 +20,27 @@
 					"fieldType": "Barcode type",
 					"fieldDeviceId": "Device"
 				}
+			},
+			"exportimages": {
+				"configPopup": {
+				"title": "Data export configuration",
+				"fieldExportImage": "Export images",
+				"fieldExportFormData": "Export form data",
+				"fieldZip": "Within a zip",
+				"fieldRemember": "Remember my choice",
+				"close": "Close",
+				"validate": "Validate"
+				},
+				"error":{
+					"noImageToRegister": "No image to save",
+					"noDataToRegister": "No form data to save",
+					"zipError": "An error occurred while generating the zip",
+					"noReadCookie": "The cookie could not be read",
+					"saveChoicesError": "Problem when saving your choices"
+				},
+				"saveDataBtn": "Save data"
 			}
+
 		}
 	},
 

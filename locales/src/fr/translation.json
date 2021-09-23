@@ -20,7 +20,27 @@
 					"fieldType": "Type de code barre",
 					"fieldDeviceId": "Caméra"
 				}
+			},
+			"exportimages": {
+				"configPopup": {
+				"title": "Configuration export de données",
+				"fieldExportImage": "Exporter les images",
+				"fieldExportFormData": "Exporter les données du formulaire",
+				"fieldZip": "Au sein d’un zip",
+				"fieldRemember": "Se rappeler de mon choix",
+				"close": "Fermer",
+				"validate": "Valider"
+				},
+				"error":{
+					"noImageToRegister": "Aucune image à enregistrer",
+					"noDataToRegister": "Aucune données de formulaire à enregistrer",
+					"zipError": "Une erreur est survenue lors de la génération du zip",
+					"noReadCookie": "Le cookie n'a pas pu être lu",
+					"saveChoicesError": "Problème lors de l'enregistrement de vos choix"
+				},
+				"saveDataBtn": "Sauvegarder les données"
 			}
+
 		}
 	},
     "advanced": {
