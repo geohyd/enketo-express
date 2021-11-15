@@ -2,13 +2,100 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[3.0.4] - 2021-11-04
+---------------------
+##### Changed
+- [#317](https://github.com/enketo/enketo-express/pull/317) Docker: run `grunt` only when building image; remove config and commit logic from start-up script; update to node 14
+
+##### Fixed
+- [#337](https://github.com/enketo/enketo-express/issues/337) Docker: cannot start because `grunt` expects missing `esbuild` dev dependency
+- [#348](https://github.com/enketo/enketo-express/pull/348) Escaped form ID when requesting form list
+- [#360](https://github.com/enketo/enketo-express/pull/360) Ensure dynamic manifest URLs are mapped by
+- [#351](https://github.com/enketo/enketo-express/issues/351) Fix query parameters not passed to form resources
+
+[3.0.3] - 2021-10-21
+---------------------
+##### Fixed
+- [#345](https://github.com/enketo/enketo-express/pull/345) Restore population of deprecatedID in edit mode
+
+[3.0.2] - 2021-10-20
+---------------------
+##### Fixed
+- [#324](https://github.com/enketo/enketo-express/pull/324) Loading forms in Firefox private browsing mode
+- [#291](https://github.com/enketo/enketo-express/pull/291) Resolve jr: URLs with spaces
+- [#332](https://github.com/enketo/enketo-express/pull/332) Form fails to load when no media manifest is provided
+- [#335](https://github.com/enketo/enketo-express/pull/335) Ensure uploaded media with spaces load in edit mode
+- [#321](https://github.com/enketo/enketo-express/pull/321) Defaults in the url query string will create deprecatedID for new submissions
+
+[3.0.1] - 2021-09-28
+---------------------
+##### Fixed
+- [#316](https://github.com/enketo/enketo-express/pull/316) Fix rendering of binary defaults in online-only mode
+
+[3.0.0] - 2021-09-17
+---------------------
+##### Changed
+- Upgraded node, npm, and other dependencies
+
+[2.8.1] - 2021-09-10
+---------------------
+##### Fixed
+- [#293](https://github.com/enketo/enketo-express/pull/293) Form's default media references are removed after submission, image labels not rendered for new forms
+
+[2.8.0] - 2021-07-13
+---------------------
+##### Added
+- Support for odk:setgeopoint for odk-instance-first-load and xforms-value-changed events.
+- Support for [last-saved](https://docs.getodk.org/form-logic/?highlight=last%20saved#values-from-the-last-saved-record) values!
+
+##### Changed
+- Updated Russian translation.
+- Increased maximum number of columns in Grid Theme from 10 to 13.
+
+##### Fixed
+- Range default or loaded value (number) not shown.
+- Distresspicker default or loaded mercury level not shown.
+- Radiobuttons value still shown in view after programmatic clearing (e.g. by a calculation).
+- Triple-nested repeats and higher are not created properly.
+- The "d" query parameter to supply dynamic defaults is decoded twice.
+- Static resources caching at web-server level could break offline functionality.
+- When loading a long text default value into a multiline text widget, it doesn't expand automatically.
+- When using "goto" on a comment question with a form divided into pages, it doesn't open the comment dialog.
+- XPath inconsistencies with date-as-string result formats.
+- XPath Result of if() is no longer cast to a string (recently updated ODK XForms spec).
+
+[2.7.3] - 2021-04-20
+---------------------
+##### Removed
+- `decimal-date()` function (as it was an accident and is not in the spec).
+
+##### Changed
+- Improved accessibility for screen readers.
+- Improved performance.
+
+##### Fixed
+- Using `decimal-time()` with a node-set parameter fails.
+- The not-equals operator fails when preceded by a node-set without a trailing space.
+- Using `uuid()` with a node-set parameter fails.
+- Redirect doesn't work with a base root url.
+
+[2.7.2] - 2021-04-12
+---------------------
+##### Fixed
+- Using `node()` mid-axis, causes an exception.
+- Using `ends-with()` with a node parameter causes an exception.
+- Using `not()` with an empty node-set parameter returns `false`.
+- Using `uuid()` with a node parameter fails.
+- Using `exp()`, `exp10()`, `log()`, `log10()`, `sqrt()` with node-set parameters returns incorrect results.
+- Using `randomize()` with a non-nodeset parameter does not throw an error.
+
 [2.7.1] - 2021-04-07
 ----------------------
 ##### Changed
 - Completed Turkish translation.
 
 ##### Fixed
-- Some unlaunched previews (using a `form` queryparameter) fail to load.
+- Some unlaunched previews (using a `form` query parameter) fail to load.
 
 [2.7.0] - 2021-04-02
 ----------------------
