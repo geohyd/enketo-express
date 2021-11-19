@@ -204,7 +204,7 @@ function _init( formParts ) {
     } )
         .then( form => {
             formParts.languages = form.languages;
-            formParts.htmlView = formEl;
+            
             document.querySelector( 'head>title' ).textContent = 'Survea - ' + utils.getTitleFromFormStr( formParts.form );
             if ( settings.print ) {
                 gui.applyPrintStyle();

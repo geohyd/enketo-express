@@ -313,6 +313,7 @@ module.exports = {
      * @type { object }
      */
     client: {
+        // ANTEA - Add survea Conf
 		survea: config['survea'],
         googleApiKey: config.google[ 'api key' ],
         maps: config.maps,

@@ -24,5 +24,6 @@ logs/logrotate
 test-coverage
 coverage.shield.badge.md
 _drafts
+# ANTEA - ADD Widget dir
 widget
 widget/*
