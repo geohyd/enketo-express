@@ -77,7 +77,7 @@ function _init(formParts) {
         .then((form) => {
             formParts.languages = form.languages;
             document.querySelector('head>title').textContent =
-                utils.getTitleFromFormStr(formParts.form);
+                'Survea | ' + utils.getTitleFromFormStr(formParts.form);
             localize(formEl);
         });
 }

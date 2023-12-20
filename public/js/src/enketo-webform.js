@@ -252,7 +252,7 @@ function _init(formParts) {
             formParts.languages = form.languages;
 
             document.querySelector('head>title').textContent =
-                utils.getTitleFromFormStr(formParts.form);
+                'Survea | ' + utils.getTitleFromFormStr(formParts.form);
             if (settings.print) {
                 gui.applyPrintStyle();
             }

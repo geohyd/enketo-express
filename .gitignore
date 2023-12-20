@@ -24,3 +24,5 @@ test-coverage
 coverage.shield.badge.md
 _drafts
 /tools/.redis-repl.history
+widget
+widget/*

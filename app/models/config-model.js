@@ -351,6 +351,7 @@ module.exports = {
      * @type { object }
      */
     client: {
+        survea: config['survea'],
         googleApiKey: config.google['api key'],
         maps: config.maps,
         modernBrowsersURL: 'modern-browsers',

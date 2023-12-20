@@ -1,4 +1,47 @@
 {
+    "survea": {
+        "name-or-label-error": "Name or label error",
+        "source-error": "Source url error",
+        "offline": "Navigator is offline",
+        "gpsdenied": "Geolocation denied",
+        "apierror": "API error",
+        "geolocation": "Geolocation",
+        "number": "Nbr",
+        "street": "Street",
+        "city": "City",
+        "unknown": "<Unknown Name>",
+        "search": "Search...",
+        "sttNotAvailable": "Speech to Text not available",
+        "startRecording": "Start recording",
+        "widget": {
+            "barcode": {
+                "configPopup": {
+                    "title": "Barcode scanner configuration",
+                    "fieldType": "Barcode type",
+                    "fieldDeviceId": "Device"
+                }
+            },
+            "exportimages": {
+                "configPopup": {
+                    "title": "Data export configuration",
+                    "fieldExportImage": "Export images",
+                    "fieldExportFormData": "Export form data",
+                    "fieldZip": "Within a zip",
+                    "fieldRemember": "Remember my choice",
+                    "close": "Close",
+                    "validate": "Validate"
+                },
+                "error": {
+                    "noImageToRegister": "No image to save",
+                    "noDataToRegister": "No form data to save",
+                    "zipError": "An error occurred while generating the zip",
+                    "noReadCookie": "The cookie could not be read",
+                    "saveChoicesError": "Problem when saving your choices"
+                },
+                "saveDataBtn": "Save data"
+            }
+        }
+    },
     "advanced": {
         "flushdb": "Clear Storage"
     },
