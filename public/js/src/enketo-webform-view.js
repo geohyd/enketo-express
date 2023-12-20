@@ -106,8 +106,9 @@ function _init(formParts) {
         })
         .then((form) => {
             formParts.languages = form.languages;
-            document.querySelector('head>title').textContent =
-                'Survea | ' + document.querySelector('#form-title').textContent;
+            document.querySelector('head>title').textContent = `Survea | ' ${
+                document.querySelector('#form-title').textContent
+            }`;
             if (settings.print) {
                 gui.applyPrintStyle();
             }

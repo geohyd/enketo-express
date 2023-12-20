@@ -251,8 +251,11 @@ function _init(formParts) {
         .then((form) => {
             formParts.languages = form.languages;
 
-            document.querySelector('head>title').textContent =
-                'Survea | ' + utils.getTitleFromFormStr(formParts.form);
+            document.querySelector(
+                'head>title'
+            ).textContent = `Survea | ' ${utils.getTitleFromFormStr(
+                formParts.form
+            )}`;
             if (settings.print) {
                 gui.applyPrintStyle();
             }
